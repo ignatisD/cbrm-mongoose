@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b tsconfig.json",
     "eslint": "eslint -c .eslintrc.js --ext .ts src",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build",

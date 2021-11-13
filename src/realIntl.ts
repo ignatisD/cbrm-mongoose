@@ -5,6 +5,7 @@ function translateDocs<T>(docs: T | T[], lang: string) {
         docs = [docs];
     }
     for (let doc of docs) {
+        // @ts-ignore
         doc?.setLanguage && doc.setLanguage(lang);
     }
 }
