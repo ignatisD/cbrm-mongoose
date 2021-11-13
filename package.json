@@ -1,6 +1,6 @@
 {
   "name": "@ignatisd/mongoose-connector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CBRM connector package for mongoose",
   "files": [
     "lib/**/*"
@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build" : "tsc",
+    "build": "tsc",
     "eslint": "eslint -c .eslintrc.js --ext .ts src",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "npm run build",
