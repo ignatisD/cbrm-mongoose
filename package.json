@@ -1,6 +1,6 @@
 {
   "name": "@ignatisd/cbrm-mongoose",
-  "version": "1.0.0",
+  "version": "0.0.0-semantic-released",
   "description": "A CBRM connector package for mongoose",
   "files": [
     "lib/**/*"
@@ -11,11 +11,6 @@
     "build": "tsc -b tsconfig.json",
     "eslint": "eslint -c .eslintrc.js --ext .ts src",
     "test": "npm run eslint",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run eslint",
-    "preversion": "npm run eslint",
-    "version": "git add -A src",
-    "postversion": "git push && git push --tags",
     "sr": "npx semantic-release --dry-run"
   },
   "repository": {
@@ -30,7 +25,7 @@
   },
   "homepage": "https://github.com/ignatisD/cbrm-mongoose#readme",
   "dependencies": {
-    "@ignatisd/cbrm": "^0.1.0",
+    "@ignatisd/cbrm": "^1.0",
     "express": "^4.17.1",
     "lodash": "^4.17.21",
     "mongoose": "6.0.7",
@@ -53,6 +48,8 @@
   },
   "publishConfig": {
     "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest",
     "branches": [
       "master"
     ]
@@ -67,13 +64,14 @@
       [
         "@semantic-release/npm",
         {
-          "assets": ["lib/**"]
+          "pkgRoot": ".",
+          "tarballDir": "release"
         }
       ],
       [
         "@semantic-release/github",
         {
-          "assets": ["lib/**"]
+          "assets": "release/*.tgz"
         }
       ]
     ]

@@ -5,8 +5,8 @@ on:
       - staging
 
 jobs:
-  test-and-release:
-    name: Run tests and release
+  test-only:
+    name: Run tests
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
