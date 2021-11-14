@@ -5,7 +5,7 @@ import { Application } from "express";
 export class MongooseConnector implements IConnector {
 
     protected _uri: string = "mongodb://localhost:27017/test";
-    protected _options: ConnectOptions = <ConnectOptions>{
+    protected _options: ConnectOptions = {
         socketTimeoutMS: 600000
     };
     protected _db: Promise<any> = new Promise(() => void 0);
