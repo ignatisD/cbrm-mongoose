@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/ignatisD/cbrm-mongoose#readme",
   "dependencies": {
-    "@ignatisd/cbrm": "^1.0",
+    "@ignatisd/cbrm": "^2.0",
     "express": "^4.17.1",
     "lodash": "^4.17.21",
     "mongoose": "6.0.7",
