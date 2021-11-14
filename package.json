@@ -1,6 +1,6 @@
 {
-  "name": "@ignatisd/mongoose-connector",
-  "version": "1.1.0",
+  "name": "@ignatisd/cbrm-mongoose-connector",
+  "version": "0.1.0",
   "description": "A CBRM connector package for mongoose",
   "files": [
     "lib/**/*"
@@ -29,8 +29,10 @@
   },
   "homepage": "https://github.com/ignatisD/mongoose-connector#readme",
   "dependencies": {
+    "@ignatisd/cbrm": "^0.1.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.12",
+    "lodash": "^4.17.21",
+    "mongoose": "6.0.7",
     "mongoose-aggregate-paginate-v2": "^1.0.5",
     "mongoose-paginate-v2": "^1.4.2",
     "mongoose-slug-updater": "^3.3.0"
