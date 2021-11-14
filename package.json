@@ -1,6 +1,6 @@
 {
   "name": "@ignatisd/cbrm-mongoose",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A CBRM connector package for mongoose",
   "files": [
     "lib/**/*"
