@@ -7,7 +7,6 @@ import generate from "@ignatisd/cbrm/lib/helpers/Mapping";
 import { IMappingResponse } from "@ignatisd/cbrm/lib/interfaces/helpers/Mapping";
 import Query from "@ignatisd/cbrm/lib/helpers/Query";
 import IRepositoryBase from "@ignatisd/cbrm/lib/interfaces/repository/RepositoryBase";
-import Helpers from "@ignatisd/cbrm/lib/helpers/Helpers";
 import { ReadPreference } from "@ignatisd/cbrm/lib/interfaces/helpers/ReadPreference";
 import IPaginatable from "./Paginatable";
 import IDeletable from "./Deletable";
@@ -203,7 +202,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
                 if (props?.length) {
                     filters = {};
                     props.forEach(prop => {
-                        const value = Helpers.getNestedFieldValue(prop, partial);
+                        const value = this._getPropertySafely(partial, prop);
                         if (value !== undefined) {
                             filters[prop] = value;
                         }
@@ -227,7 +226,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
                 if (props && props.length) {
                     filters = {};
                     props.forEach(prop => {
-                        const value = Helpers.getNestedFieldValue(prop, partial);
+                        const value = this._getPropertySafely(partial, prop);
                         if (value !== undefined) {
                             filters[prop] = value;
                         }
