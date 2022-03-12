@@ -3,7 +3,7 @@ import IBusinessBase from "@ignatisd/cbrm/lib/interfaces/business/BusinessBase";
 import MongooseRepositoryBase from "./MongooseRepositoryBase";
 import JsonResponse from "@ignatisd/cbrm/lib/helpers/JsonResponse";
 import { Doc } from "@ignatisd/cbrm/lib/interfaces/models/Document";
-import { IQuery } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
+import { IQuery, IPopulate } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
 import IPaginatedResults from "@ignatisd/cbrm/lib/interfaces/helpers/PaginatedResults";
 import Query from "@ignatisd/cbrm/lib/helpers/Query";
 import { IBulkWriteOpResultObject } from "./BulkWriteResponse";
@@ -11,7 +11,7 @@ import Holder from "@ignatisd/cbrm/lib/helpers/Holder";
 
 /**
  * Type Safe Base class for all Business Logic
- * Most of the methods are self explanatory and have signatures that show
+ * Most of the methods are self-explanatory and have signatures that show
  * the appropriate input and output
  *
  * This class should be extended pointing to an Interface <T>
@@ -132,8 +132,8 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
     }
 
     /**
-     * Returns the documents matching some optional filters ({@link SearchTerms})
-     * These result are paginated and can be populated instances ({@link IPopulate})
+     * Returns the documents matching some optional filters ({@link Query})
+     * These results are paginated and can be populated instances ({@link IPopulate})
      * or partials of the actual interface (using projection)
      * ! Warning! This method is not transaction aware.
      * If you want to retrieve records that are part of a running transaction, then use {@link find} instead
@@ -152,7 +152,7 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
     }
 
     /**
-     * Returns the documents matching some optional filters ({@link SearchTerms})
+     * Returns the documents matching some optional filters ({@link Query})
      * These result can be populated instances ({@link IPopulate})
      * or partials of the actual interface (using projection)
      * Also, this method is transaction aware
