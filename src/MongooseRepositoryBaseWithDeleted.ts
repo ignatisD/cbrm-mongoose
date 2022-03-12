@@ -3,27 +3,28 @@ import MongooseRepositoryBase from "./MongooseRepositoryBase";
 import IPaginatedResults from "@ignatisd/cbrm/lib/interfaces/helpers/PaginatedResults";
 import Pagination from "@ignatisd/cbrm/lib/helpers/Pagination";
 import { IQuery } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
+import Query from "@ignatisd/cbrm/lib/helpers/Query";
 
 export default abstract class MongooseRepositoryBaseWithDeleted<T extends Document = any> extends MongooseRepositoryBase<T> {
 
-    async findByIdWithDeleted(searchTerms: IQuery): Promise<T> {
-
+    async findByIdWithDeleted(q: IQuery): Promise<T> {
+        const searchTerms = Query.clone(q);
         if (searchTerms.options.autopopulate && !searchTerms.options.populate.length && this.autopopulate.length) {
             searchTerms.options.populate = this.autopopulate;
         }
         return await this.model.findOneWithDeleted({_id: this.toObjectId(searchTerms.id)}, searchTerms.projection, searchTerms.options);
     }
 
-    async findOneWithDeleted(searchTerms: IQuery): Promise<T> {
-
+    async findOneWithDeleted(q: IQuery): Promise<T> {
+        const searchTerms = Query.clone(q);
         if (searchTerms.options.autopopulate && !searchTerms.options.populate.length && this.autopopulate.length) {
             searchTerms.options.populate = this.autopopulate;
         }
         return await this.model.findOneWithDeleted(searchTerms.filters, searchTerms.projection, searchTerms.options);
     }
 
-    async retrieveWithDeleted(searchTerms: IQuery): Promise<IPaginatedResults<T>> {
-
+    async retrieveWithDeleted(q: IQuery): Promise<IPaginatedResults<T>> {
+        const searchTerms = Query.clone(q);
         if (searchTerms.options.autopopulate && !searchTerms.options.populate.length && this.autopopulate.length) {
             searchTerms.options.populate = this.autopopulate;
         }
@@ -47,7 +48,8 @@ export default abstract class MongooseRepositoryBaseWithDeleted<T extends Docume
         }
     }
 
-    async countWithDeleted(searchTerms: IQuery): Promise<number> {
+    async countWithDeleted(q: IQuery): Promise<number> {
+        const searchTerms = Query.clone(q);
         const query = this.model.countDocumentsWithDeleted(searchTerms.filters);
         if (this._session) {
             query.session(this._session);
@@ -58,8 +60,8 @@ export default abstract class MongooseRepositoryBaseWithDeleted<T extends Docume
         return await query;
     }
 
-    async findWithDeleted(searchTerms: IQuery): Promise<T[]> {
-
+    async findWithDeleted(q: IQuery): Promise<T[]> {
+        const searchTerms = Query.clone(q);
         if (searchTerms.options.autopopulate && !searchTerms.options.populate.length && this.autopopulate.length) {
             searchTerms.options.populate = this.autopopulate;
         }
@@ -84,7 +86,8 @@ export default abstract class MongooseRepositoryBaseWithDeleted<T extends Docume
         return result.n > 0;
     }
 
-    async softDeleteMany(searchTerms: IQuery): Promise<number> {
+    async softDeleteMany(q: IQuery): Promise<number> {
+        const searchTerms = Query.clone(q);
         const query = this.model.delete(searchTerms.filters);
         if (this._session) {
             query.session(this._session);
