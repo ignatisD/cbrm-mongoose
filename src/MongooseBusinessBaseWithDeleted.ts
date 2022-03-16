@@ -1,10 +1,8 @@
-import MongooseBusinessBase from "./MongooseBusinessBase";
-import MongooseRepositoryBaseWithDeleted from "./MongooseRepositoryBaseWithDeleted";
-import { IQuery } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
-import { Doc } from "@ignatisd/cbrm/lib/interfaces/models/Document";
-import IPaginatedResults from "@ignatisd/cbrm/lib/interfaces/helpers/PaginatedResults";
+import { MongooseBusinessBase } from "./MongooseBusinessBase";
+import { MongooseRepositoryBaseWithDeleted } from "./MongooseRepositoryBaseWithDeleted";
+import { Doc, IPaginatedResults, IQuery } from "@ignatisd/cbrm";
 
-export default class MongooseBusinessBaseWithDeleted<T> extends MongooseBusinessBase<T> {
+export class MongooseBusinessBaseWithDeleted<T> extends MongooseBusinessBase<T> {
 
     protected _repo: MongooseRepositoryBaseWithDeleted;
 

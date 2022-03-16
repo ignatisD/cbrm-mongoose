@@ -1,6 +1,6 @@
-import { EnforceDocument } from "mongoose";
+import { Document, Types } from "mongoose";
 
-export default interface IDeletable<T extends EnforceDocument<any, any, any>> {
+export interface IDeletable<T extends Document<Types.ObjectId>> {
 
     findDeleted?(...args): any;
     findWithDeleted?(...args): any;

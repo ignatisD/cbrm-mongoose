@@ -1,5 +1,5 @@
 import { disconnect, plugin, connect, ConnectOptions, Schema } from "mongoose";
-import { IConnector } from "@ignatisd/cbrm/lib/interfaces/helpers/Connector";
+import { IConnector } from "@ignatisd/cbrm";
 import { Application } from "express";
 
 export class MongooseConnector implements IConnector {
