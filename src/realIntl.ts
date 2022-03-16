@@ -13,7 +13,7 @@ function translateDocs<T>(docs: T | T[], lang: string) {
 export function realIntl(schema: any, options: any) {
 
     if (!options || !options.languages || !Array.isArray(options.languages) || !options.languages.length) {
-        throw new mongoose.Error("Required languages array is missing");
+        throw new mongoose.MongooseError("Required languages array is missing");
     }
 
     // plugin options to be set under schema options
@@ -42,7 +42,7 @@ export function realIntl(schema: any, options: any) {
         }
 
         if (!(schemaType instanceof mongoose.Schema.Types.String)) {
-            throw new mongoose.Error("Mongoose-intl plugin can be used with String type only");
+            throw new mongoose.MongooseError("Mongoose-intl plugin can be used with String type only");
         }
 
         let pathArray = path.split("."),

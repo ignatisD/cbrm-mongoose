@@ -1,11 +1,9 @@
 import { Document } from "mongoose";
-import MongooseRepositoryBase from "./MongooseRepositoryBase";
-import IPaginatedResults from "@ignatisd/cbrm/lib/interfaces/helpers/PaginatedResults";
-import Pagination from "@ignatisd/cbrm/lib/helpers/Pagination";
-import { IQuery } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
-import Query from "@ignatisd/cbrm/lib/helpers/Query";
+import { MongooseRepositoryBase } from "./MongooseRepositoryBase";
+import { IPaginatedResults, IQuery, Pagination, Query } from "@ignatisd/cbrm";
 
-export default abstract class MongooseRepositoryBaseWithDeleted<T extends Document = any> extends MongooseRepositoryBase<T> {
+
+export abstract class MongooseRepositoryBaseWithDeleted<T extends Document = any> extends MongooseRepositoryBase<T> {
 
     async findByIdWithDeleted(q: IQuery): Promise<T> {
         const searchTerms = Query.clone(q);

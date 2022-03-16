@@ -1,14 +1,16 @@
-import Business from "@ignatisd/cbrm/lib/business/Business";
-import IBusinessBase from "@ignatisd/cbrm/lib/interfaces/business/BusinessBase";
-import MongooseRepositoryBase from "./MongooseRepositoryBase";
-import JsonResponse from "@ignatisd/cbrm/lib/helpers/JsonResponse";
-import { Doc } from "@ignatisd/cbrm/lib/interfaces/models/Document";
-import { IQuery, IPopulate } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
-import IPaginatedResults from "@ignatisd/cbrm/lib/interfaces/helpers/PaginatedResults";
-import Query from "@ignatisd/cbrm/lib/helpers/Query";
+import {
+    Business,
+    Query,
+    IBusinessBase,
+    IPaginatedResults,
+    IQuery,
+    JsonResponse,
+    Doc,
+    Holder,
+    Configuration
+} from "@ignatisd/cbrm";
+import { MongooseRepositoryBase } from "./MongooseRepositoryBase";
 import { IBulkWriteOpResultObject } from "./BulkWriteResponse";
-import Holder from "@ignatisd/cbrm/lib/helpers/Holder";
-
 /**
  * Type Safe Base class for all Business Logic
  * Most of the methods are self-explanatory and have signatures that show
@@ -17,7 +19,7 @@ import Holder from "@ignatisd/cbrm/lib/helpers/Holder";
  * This class should be extended pointing to an Interface <T>
  * which denotes the model this business is responsible for
  */
-export default class MongooseBusinessBase<T> extends Business<T> implements IBusinessBase<T> {
+export class MongooseBusinessBase<T> extends Business<T> implements IBusinessBase<T> {
 
     /**
      * The repository linked with this business
@@ -413,7 +415,7 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
      * Initiates a transaction and returns the session
      */
     public async startTransaction(): Promise<any> {
-        if (global.disableTransactions) {
+        if (Configuration.get("disableTransactions", false)) {
             return -1;
         }
         await this._repo.startTransaction();
@@ -425,7 +427,7 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
      * ! Warning! Any changes that have been marked as part of this transaction will be rolled back!
      */
     public async abortTransaction() {
-        if (global.disableTransactions) {
+        if (Configuration.get("disableTransactions", false)) {
             return;
         }
         await this._repo.abortTransaction();
@@ -435,7 +437,7 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
      * Commits the transaction and finalizes the changes
      */
     public async commitTransaction(): Promise<void> {
-        if (global.disableTransactions) {
+        if (Configuration.get("disableTransactions", false)) {
             return;
         }
         await this._repo.commitTransaction();
@@ -446,7 +448,7 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
      * @param session
      */
     public addTransaction(session: any): void {
-        if (global.disableTransactions) {
+        if (Configuration.get("disableTransactions", false)) {
             return;
         }
         this._repo.setSession(session);
@@ -457,7 +459,7 @@ export default class MongooseBusinessBase<T> extends Business<T> implements IBus
     }
 
     async * scrollBatch(st: IQuery): AsyncGenerator<Doc<T>[], void> {
-        const holder = new Holder<Doc<T>>(st.options.limit || global.pagingLimit);
+        const holder = new Holder<Doc<T>>(st.options.limit || Configuration.get("pagingLimit"));
         for await (const doc of this._repo.scrollSearch(st)) {
             holder.push(doc);
             if (holder.check()) {

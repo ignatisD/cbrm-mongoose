@@ -1,17 +1,19 @@
 import * as mongoose from "mongoose";
 import { cloneDeep } from "lodash";
-import { IPopulate, IQuery } from "@ignatisd/cbrm/lib/interfaces/helpers/Query";
-import IPaginatedResults from "@ignatisd/cbrm/lib/interfaces/helpers/PaginatedResults";
-import Repository from "@ignatisd/cbrm/lib/repository/Repository";
-import generate from "@ignatisd/cbrm/lib/helpers/Mapping";
-import { IMappingResponse } from "@ignatisd/cbrm/lib/interfaces/helpers/Mapping";
-import Query from "@ignatisd/cbrm/lib/helpers/Query";
-import IRepositoryBase from "@ignatisd/cbrm/lib/interfaces/repository/RepositoryBase";
-import { ReadPreference } from "@ignatisd/cbrm/lib/interfaces/helpers/ReadPreference";
-import IPaginatable from "./Paginatable";
-import IDeletable from "./Deletable";
+import {
+    generate,
+    IMappingResponse,
+    IPaginatedResults,
+    IPopulate,
+    IQuery,
+    IRepositoryBase,
+    Query, ReadPreference,
+    Repository
+} from "@ignatisd/cbrm";
+import { IPaginatable } from "./Paginatable";
+import { IDeletable } from "./Deletable";
 
-export default abstract class MongooseRepositoryBase<T extends mongoose.Document = any> extends Repository<IPaginatable<T>&IDeletable<T>> implements IRepositoryBase<T> {
+export abstract class MongooseRepositoryBase<T extends mongoose.Document<mongoose.Types.ObjectId> = any> extends Repository<IPaginatable<T>&IDeletable<T>> implements IRepositoryBase<T> {
 
     protected autopopulate: IPopulate[] = [];
     protected _session: mongoose.ClientSession;
@@ -126,7 +128,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
         searchTerms.options.sort = {
             [field]: -1
         };
-        return this.model.findOne(searchTerms.filters, searchTerms.projection, searchTerms.options);
+        return this.model.findOne<T>(searchTerms.filters, searchTerms.projection, searchTerms.options);
     }
 
     /**
@@ -140,7 +142,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
         searchTerms.options.sort = {
             [field]: 1
         };
-        return this.model.findOne(searchTerms.filters, searchTerms.projection, searchTerms.options);
+        return this.model.findOne<T>(searchTerms.filters, searchTerms.projection, searchTerms.options);
     }
 
     async spliceFromArray(filters: Object, props) {
@@ -160,7 +162,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
      * @param _id
      * @param item
      */
-    async updateOne (_id: string, item: Partial<T>|any): Promise<T> {
+    async updateOne(_id: string, item: Partial<T>|any): Promise<T> {
         const query = this.model.findByIdAndUpdate(this.toObjectId(_id), item, {new: true});
         if (this._session) {
             query.session(this._session);
@@ -173,7 +175,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
      * @param selector
      * @param item
      */
-    async updateOneByQuery (selector: object, item: Partial<T>|any): Promise<T> {
+    async updateOneByQuery(selector: object, item: Partial<T>|any): Promise<T> {
         const query = this.model.findOneAndUpdate(selector, item, {new: true});
         if (this._session) {
             query.session(this._session);
@@ -187,7 +189,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
      * @param filters
      * @param props
      */
-    async updateMany (filters: any, props: Partial<T>|any): Promise<any> {
+    async updateMany(filters: any, props: Partial<T>|any): Promise<any> {
         const query = this.model.updateMany(filters, props, {multi: true});
         if (this._session) {
             query.session(this._session);
@@ -195,7 +197,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
         return await query.exec();
     }
 
-    async updateManyWithDifferentValues (partials: Partial<T>[], props?: string[]): Promise<any> {
+    async updateManyWithDifferentValues(partials: Partial<T>[], props?: string[]): Promise<any> {
         const query = this.model.bulkWrite(
             partials.map((partial: Partial<T>|any) => {
                 let filters: any = {_id: partial._id};
@@ -248,7 +250,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
      * Transaction Ready deletion of one document
      * @param _id string
      */
-    async deleteById (_id: string): Promise<T|null> {
+    async deleteById(_id: string): Promise<T|null> {
         const query = this.model.findByIdAndDelete(this.toObjectId(_id));
         if (this._session) {
             query.session(this._session);
@@ -260,7 +262,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
      * Transaction Ready deletion of one document
      * @param filters
      */
-    async deleteOne (filters: any): Promise<boolean> {
+    async deleteOne(filters: any): Promise<boolean> {
         const query = this.model.deleteOne(filters);
         if (this._session) {
             query.session(this._session);
@@ -273,7 +275,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
      * Transaction Ready deletion of many documents
      * @param searchTerms
      */
-    async deleteMany (searchTerms: IQuery): Promise<number> {
+    async deleteMany(searchTerms: IQuery): Promise<number> {
         const query = this.model.deleteMany(searchTerms.filters);
         if (this._session) {
             query.session(this._session);
@@ -368,7 +370,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
     }
 
     async updateOrCreate (filters: any, item: Partial<T>|any, options: any = {}): Promise<T> {
-        let queryOptions: any = {
+        let queryOptions: mongoose.QueryOptions & { upsert: true } = {
             new: true,
             upsert: true,
             setDefaultsOnInsert: true
@@ -377,7 +379,7 @@ export default abstract class MongooseRepositoryBase<T extends mongoose.Document
         if (this._session) {
             queryOptions.session = this._session;
         }
-        return this.model.findOneAndUpdate(filters, item, queryOptions);
+        return this.model.findOneAndUpdate<T>(filters, item, queryOptions);
     }
 
     make(item: Partial<T>): T {
